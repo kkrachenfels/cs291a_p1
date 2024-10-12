@@ -12,13 +12,25 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # missing handler and any other supporting methods.  The specification
 # of the Proxy class is given in the AboutProxyObjectProject koan.
 
+
 class Proxy
   def initialize(target_object)
     @object = target_object
-    # ADD MORE CODE HERE
+    @messages = []
   end
 
-  # WRITE CODE HERE
+  def method_missing(method_name, *args, &block)
+    if @object.respond_to?(method_name)
+      @messages << method_name
+      @object.send(method_name, *args)
+    else
+      raise NoMethodError
+    end
+  end
+
+  def messages
+    return @messages
+  end
 end
 
 # The proxy object should pass the following Koan:
